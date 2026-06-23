@@ -1,0 +1,125 @@
+<idea-plugin>
+    <id>io.genai.screenshot.plugin</id>
+    <name>GenAI Capture</name>
+    <version>1.0.0</version>
+    <vendor email="w2ajax@gmail.com" url="https://github.com/projecthsf/genai-capture">genai</vendor>
+
+    <description><![CDATA[
+        <p>Capture and annotate screenshots without ever leaving your IDE. Grab the whole
+        desktop, mark it up with a full annotation toolkit, then copy, save, or pin the
+        result — in a single keystroke.</p>
+
+        <p><b>What you can do</b></p>
+        <ul>
+          <li><b>Capture</b> the full (multi-monitor) desktop instantly, after a countdown,
+              or with the IDE hidden so you snap whatever is behind it.</li>
+          <li><b>Annotate</b> with arrows, rectangles, ellipses, lines, freehand pen,
+              numbered steps, text, highlighter, mosaic/blur redaction, and tiled watermarks.</li>
+          <li><b>Redact</b> sensitive data with the mosaic tool before sharing.</li>
+          <li><b>Finish</b> by copying to the clipboard, saving to disk, or pinning the shot
+              as an always-on-top floating window for reference.</li>
+        </ul>
+
+        <p><b>Entry points</b></p>
+        <ul>
+          <li><b>Tools &gt; Take Screenshot</b> — capture now (<code>&#8984;&#8679;1</code> /
+              <code>Ctrl+Shift+1</code>), with a camera button in the status bar.</li>
+          <li><b>Tools &gt; Capture Desktop (Hide IDE)</b> — hide the IDE, capture the desktop
+              behind it; the IDE stays hidden until you close the overlay
+              (<code>&#8984;&#8679;2</code> / <code>Ctrl+Shift+2</code>), with a monitor button
+              in the status bar.</li>
+          <li><b>Tools &gt; Take Delayed Screenshot &gt; 3s / 5s / 10s</b> — an on-screen
+              countdown before the grab, so you can switch windows or open a menu first.</li>
+          <li>Every action also appears in <b>Find Action</b> and is rebindable in
+              <b>Settings &gt; Keymap</b>.</li>
+        </ul>
+
+        <p><b>Settings</b> (<b>Settings &gt; Tools &gt; GenAI Capture</b>)</p>
+        <ul>
+          <li><b>Watermark</b> — default text plus opacity, size, rotation, spacing, blur and
+              colour, with a live preview; optionally stamp every capture automatically.</li>
+          <li><b>Toolbar</b> — pick which annotation tools appear on the capture toolbar and
+              drag to reorder them.</li>
+        </ul>
+
+        <p><b>Why you'll like it</b></p>
+        <ul>
+          <li><b>Stays in your flow</b> — no context switch to a separate screenshot app.</li>
+          <li><b>Runs everywhere</b> — works in every JetBrains IDE (IntelliJ IDEA, PyCharm,
+              GoLand, WebStorm, PhpStorm, CLion, Rider, RubyMine, …).</li>
+          <li><b>Lightweight &amp; private</b> — pure Java/Swing, no external services or
+              telemetry; captures never leave your machine.</li>
+          <li><b>Multi-monitor and HiDPI aware.</b></li>
+        </ul>
+
+        <p><i>macOS:</i> grant the IDE <b>Screen Recording</b> permission (System Settings &gt;
+        Privacy &amp; Security &gt; Screen Recording), or captures come back black — the same
+        one-time grant any screen-capture tool needs.</p>
+    ]]></description>
+
+    <!-- Depends only on the core platform, so it loads in every JetBrains IDE
+         (GoLand, PhpStorm, PyCharm, WebStorm, IntelliJ, CLion, Rider, …). -->
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Tools ▸ GenAI Capture (group) ▸ { Watermark, Toolbar } -->
+        <applicationConfigurable
+                groupId="tools"
+                id="io.genai.screenshot.settings"
+                displayName="GenAI Capture"
+                instance="io.genai.screenshot.plugin.GenAICaptureConfigurable"/>
+        <applicationConfigurable
+                parentId="io.genai.screenshot.settings"
+                id="io.genai.screenshot.settings.watermark"
+                displayName="Watermark"
+                instance="io.genai.screenshot.plugin.WatermarkConfigurable"/>
+        <applicationConfigurable
+                parentId="io.genai.screenshot.settings"
+                id="io.genai.screenshot.settings.toolbar"
+                displayName="Toolbar"
+                instance="io.genai.screenshot.plugin.ToolbarConfigurable"/>
+
+        <!-- Status-bar buttons: camera → immediate capture, monitor → hide-IDE desktop capture. -->
+        <statusBarWidgetFactory
+                id="io.genai.screenshot.CaptureWidget"
+                implementation="io.genai.screenshot.plugin.CaptureStatusBarWidgetFactory"/>
+        <statusBarWidgetFactory
+                id="io.genai.screenshot.CaptureDesktopWidget"
+                implementation="io.genai.screenshot.plugin.CaptureDesktopStatusBarWidgetFactory"/>
+    </extensions>
+
+    <actions>
+        <!-- Tools ▸ Take Screenshot (with icon + hotkey) -->
+        <action id="io.genai.screenshot.TakeScreenshot"
+                class="io.genai.screenshot.plugin.TakeScreenshotAction"
+                text="Take Screenshot"
+                description="Capture and annotate a screenshot">
+            <add-to-group group-id="ToolsMenu" anchor="first"/>
+            <!-- Take Screenshot: Ctrl+Shift+1 (Win/Linux) / ⌘⇧1 (macOS). Rebind in Settings ▸ Keymap. -->
+            <keyboard-shortcut keymap="$default" first-keystroke="shift control 1"/>
+            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="shift meta 1" replace-all="true"/>
+        </action>
+
+        <!-- Tools ▸ Capture Desktop (Hide IDE) -->
+        <action id="io.genai.screenshot.CaptureDesktop"
+                class="io.genai.screenshot.plugin.CaptureDesktopAction"
+                text="Capture Desktop (Hide IDE)"
+                description="Hide the IDE window, capture the desktop behind it, then restore it">
+            <add-to-group group-id="ToolsMenu" anchor="after"
+                          relative-to-action="io.genai.screenshot.TakeScreenshot"/>
+            <!-- Capture Desktop: Ctrl+Shift+2 (Win/Linux) / ⌘⇧2 (macOS). Rebind in Settings ▸ Keymap. -->
+            <keyboard-shortcut keymap="$default" first-keystroke="shift control 2"/>
+            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="shift meta 2" replace-all="true"/>
+        </action>
+
+        <!-- Tools ▸ Take Delayed Screenshot ▸ 3s / 5s / 10s -->
+        <group id="io.genai.screenshot.DelayedScreenshot"
+               class="io.genai.screenshot.plugin.DelayedScreenshotGroup"
+               text="Take Delayed Screenshot"
+               description="Capture after a short delay"
+               popup="true">
+            <add-to-group group-id="ToolsMenu" anchor="after"
+                          relative-to-action="io.genai.screenshot.CaptureDesktop"/>
+        </group>
+    </actions>
+</idea-plugin>
