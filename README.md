@@ -1,0 +1,76 @@
+# GenAI Capture — JetBrains IDE plugin
+
+Brings the screenshot capture + annotation engine inside any JetBrains IDE
+(GoLand, PhpStorm, PyCharm, WebStorm, IntelliJ, CLion, Rider, …).
+
+## Features
+
+- **Tools ▸ Take Screenshot** — `⌘⇧1` (macOS) / `Ctrl+Shift+1` (Win/Linux).
+  Captures the whole desktop (IDE included) and opens the annotation overlay.
+- **Tools ▸ Capture Desktop (Hide IDE)** — `⌘⇧2` / `Ctrl+Shift+2`.
+  Temporarily hides the IDE, captures the desktop behind it, and keeps the IDE
+  hidden until you dismiss the overlay (ESC / save / copy / pin / close).
+- **Tools ▸ Take Delayed Screenshot ▸ 3s / 5s / 10s** — shows an on-screen
+  countdown, then captures (time to switch windows or open a menu first).
+- **Status-bar buttons** — a camera icon (immediate capture) and a monitor icon
+  (hide-IDE desktop capture). Toggle either via the status-bar right-click menu.
+- **Annotation overlay** — arrows, shapes, text, highlighter, mosaic redaction,
+  watermark, with copy / save / pin.
+- **Settings ▸ Tools ▸ GenAI Capture** — a **Watermark** page (appearance, default
+  text, behaviour, live preview) and a **Toolbar** page (choose/reorder the tools
+  on the capture toolbar). All shortcuts are rebindable in *Settings ▸ Keymap*.
+
+On macOS, grant the IDE **Screen Recording** permission (System Settings ▸ Privacy
+& Security ▸ Screen Recording) or the capture comes back black — same requirement
+as any screen-capture tool.
+
+## How it's built
+
+It **reuses the desktop app's code** (`../src/main/java` + `../src/main/resources`)
+via a Gradle `Copy` step that filters out the app shell and the parts that don't
+load inside the IDE's JBR (the `osystem/` FFM code, jnativehook global-hotkey, tray,
+and the desktop-themed Settings panels). Thin FFM-free shims under
+`src/main/java/io/genai/screenshot/` (`osystem/AbstractOs`, `CaptureController`,
+`ScreenshotApp`) satisfy the few OS calls the overlay makes. The capture itself uses
+`java.awt.Robot` (no native code). The plugin's own actions, settings pages, and
+status-bar widgets live under `src/main/java/io/genai/screenshot/plugin/`.
+
+Built against the **platform module only** (`com.intellij.modules.platform`), so a
+single build runs in every JetBrains IDE.
+
+## Prerequisites
+
+- **JDK 17+** (a JBR or any JDK 17+).
+- A JetBrains IDE installed (the build targets your local **GoLand** by default —
+  see `build.gradle.kts`). To use a different IDE, edit the `local("…")` line, or
+  switch to a downloaded one, e.g. `intellijIdeaCommunity("2024.1")`.
+- Gradle: easiest is to **open this `jetbrains-plugin/` folder in IntelliJ IDEA**
+  (it imports the Gradle project and provides the wrapper). Or `brew install gradle`
+  and run `gradle wrapper` once.
+
+## Run it (sandbox IDE)
+
+```bash
+cd jetbrains-plugin
+./gradlew runIde          # launches GoLand with the plugin loaded
+```
+
+Then use **Tools ▸ Take Screenshot** (`⌘⇧1`) or the status-bar camera icon.
+
+## Build an installable plugin
+
+```bash
+cd jetbrains-plugin
+./gradlew buildPlugin      # -> build/distributions/genai-capture-plugin-1.0.0.zip
+```
+
+Install in any IDE: **Settings ▸ Plugins ▸ ⚙ ▸ Install Plugin from Disk…** → pick the zip.
+
+## Notes / next steps
+
+- The reused overlay code is verified to compile at Java 17 with no FFM /
+  jnativehook dependency.
+- First `runIde` may need minor tweaks to the IntelliJ Platform Gradle DSL or the
+  `local(...)` IDE path for your exact versions — iterate from there.
+- Possible future options: capture a chosen region only, or a configurable
+  default delay.
