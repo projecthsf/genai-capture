@@ -1,8 +1,13 @@
+import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
+import org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask.FailureLevel
+
 plugins {
     id("java")
-    // IntelliJ Platform Gradle Plugin (2.x). Docs:
+    // IntelliJ Platform Gradle Plugin. Docs:
     // https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin.html
-    id("org.jetbrains.intellij.platform") version "2.1.0"
+    // 2.18.0 (not 2.1.0): the pluginVerification DSL used by the publish gate is
+    // incompatible with Gradle 9.3 on 2.1.0. Matches the php-portable/jenkinsfile setup.
+    id("org.jetbrains.intellij.platform") version "2.18.0"
 }
 
 group = "io.genai.screenshot"
@@ -15,16 +20,20 @@ repositories {
     }
 }
 
+// Dev builds use the locally-installed GoLand (no multi-GB download); CI (and any
+// machine without it) downloads an IDE, so the build is reproducible anywhere. A
+// plugin built against the bare platform loads in every JetBrains IDE.
+val useLocalIde = file("/Applications/GoLand.app/Contents").exists() &&
+        !providers.environmentVariable("CI").isPresent
+
 dependencies {
     intellijPlatform {
-        // Build & run against the locally-installed GoLand — no multi-GB download,
-        // and a plugin built here (depending only on the platform) loads in every
-        // JetBrains IDE (PhpStorm, PyCharm, WebStorm, IntelliJ, …).
-        //
-        // To use a different IDE, point this at its install path, or download one:
-        //   intellijIdeaCommunity("2024.1")   // or  goland("2024.1"), phpstorm("2024.1")
-        local("/Applications/GoLand.app/Contents")
-        instrumentationTools()
+        if (useLocalIde) {
+            local("/Applications/GoLand.app/Contents")
+        } else {
+            intellijIdeaCommunity("2024.1")
+        }
+        // instrumentationTools() removed in plugin 2.x — added automatically now.
     }
 }
 
@@ -73,6 +82,30 @@ intellijPlatform {
         ideaVersion {
             sinceBuild = "233"          // 2023.3+ (broad compatibility)
             untilBuild = provider { null }  // no upper bound → loads in current & future IDEs
+        }
+    }
+
+    // `./gradlew publishPlugin` reads the JetBrains Marketplace token from the PUBLISH_TOKEN
+    // env var (set as a GitHub Actions secret). No signing configured, so uploads are unsigned.
+    publishing {
+        token = providers.environmentVariable("PUBLISH_TOKEN")
+    }
+
+    // `./gradlew verifyPlugin` runs the JetBrains Plugin Verifier (same tool Marketplace uses).
+    // This is a publish gate in CI (see .github/workflows/publish.yml).
+    pluginVerification {
+        failureLevel.set(listOf(
+            FailureLevel.COMPATIBILITY_PROBLEMS,
+            FailureLevel.INTERNAL_API_USAGES,
+            FailureLevel.MISSING_DEPENDENCIES,
+            FailureLevel.INVALID_PLUGIN,
+        ))
+        ides {
+            // Verify against the newest released unified IDEA. One download, enough to catch
+            // forward-compat problems.
+            latest {
+                types.set(listOf(IntelliJPlatformType.IntellijIdea))
+            }
         }
     }
 }
