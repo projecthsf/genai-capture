@@ -55,6 +55,7 @@ val copyAppSources by tasks.registering(Copy::class) {
         exclude("io/genai/screenshot/ToolbarConfigPanel.java")     // desktop-themed; plugin uses native ToolbarConfigurable
         exclude("io/genai/screenshot/WatermarkSettingsPanel.java") // desktop-themed; plugin uses native WatermarkConfigurable
         exclude("io/genai/screenshot/ScreenshotIconExporterApp.java") // build-time tool
+        exclude("io/genai/screenshot/UpdateChecker.java")     // desktop-app updater; plugin updates via Marketplace
     }
     into(reusedSrc)
 }
