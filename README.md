@@ -29,6 +29,24 @@ Grab the installer for your OS from **[Releases](https://github.com/projecthsf/g
 The plugin is on the [JetBrains Marketplace](https://plugins.jetbrains.com/) —
 search for **GenAI Capture** (or install the zip from Releases by hand).
 
+## Use with AI agents (MCP)
+
+The desktop app (v1.2.0+) doubles as an **MCP server**: AI agents that speak the
+[Model Context Protocol](https://modelcontextprotocol.io) — Claude Code, Claude
+Desktop, Cursor, … — can capture your screen, **look at the image**, annotate it
+(arrows, boxes, text, highlight, blur/redact), and save the result. Visual bug
+reports and before/after proof, driven by one sentence to your AI.
+
+```bash
+# Claude Code (macOS path shown; use the install dir's binary on Windows)
+claude mcp add genai-capture -- \
+  "/Applications/GenAI Capture.app/Contents/MacOS/GenAI Capture" --mcp
+```
+
+Tools: `capture_fullscreen`, `capture_region`, `annotate`, `get_image`,
+`save_image`. Captures play an audible cue; everything runs locally — images
+only go to the AI client you connected.
+
 ---
 
 # JetBrains IDE plugin
