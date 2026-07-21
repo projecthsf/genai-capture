@@ -1,5 +1,8 @@
 # GenAI Capture
 
+[![Downloads](https://img.shields.io/github/downloads/projecthsf/genai-capture/total?label=downloads)](https://github.com/projecthsf/genai-capture/releases)
+[![Latest release](https://img.shields.io/github/v/release/projecthsf/genai-capture?label=latest)](https://github.com/projecthsf/genai-capture/releases/latest)
+
 Screen capture + annotation, two ways:
 
 - **Desktop app** — capture the whole desktop, annotate (arrows, shapes, text,
