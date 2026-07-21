@@ -1,0 +1,20 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.projecthsf/genai-capture",
+  "description": "Capture and annotate your screen from an AI agent — arrows, boxes, text, numbered steps, highlight, and blur/redact. Backed by the GenAI Capture desktop app.",
+  "repository": {
+    "url": "https://github.com/projecthsf/genai-capture",
+    "source": "github"
+  },
+  "version": "1.0.0",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "genai-capture-mcp",
+      "version": "1.0.0",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}

@@ -37,8 +37,16 @@ Desktop, Cursor, … — can capture your screen, **look at the image**, annotat
 (arrows, boxes, text, highlight, blur/redact), and save the result. Visual bug
 reports and before/after proof, driven by one sentence to your AI.
 
+Install the desktop app, then add the server to your client. Easiest (cross-platform,
+via the [`genai-capture-mcp`](mcp-npm/) launcher on npm):
+
 ```bash
-# Claude Code (macOS path shown; use the install dir's binary on Windows)
+claude mcp add genai-capture -- npx -y genai-capture-mcp
+```
+
+Or point directly at the installed binary (no Node needed):
+
+```bash
 claude mcp add genai-capture -- \
   "/Applications/GenAI Capture.app/Contents/MacOS/GenAI Capture" --mcp
 ```

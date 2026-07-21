@@ -1,0 +1,42 @@
+{
+  "name": "genai-capture-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for GenAI Capture — let AI agents capture and annotate your screen (arrows, boxes, text, highlight, blur/redact).",
+  "mcpName": "io.github.projecthsf/genai-capture",
+  "bin": {
+    "genai-capture-mcp": "bin/genai-capture-mcp.js"
+  },
+  "type": "commonjs",
+  "files": [
+    "bin/",
+    "README.md"
+  ],
+  "keywords": [
+    "mcp",
+    "modelcontextprotocol",
+    "model-context-protocol",
+    "screenshot",
+    "screen-capture",
+    "annotation",
+    "claude",
+    "ai-agent"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/projecthsf/genai-capture.git",
+    "directory": "mcp-npm"
+  },
+  "homepage": "https://github.com/projecthsf/genai-capture#readme",
+  "bugs": {
+    "url": "https://github.com/projecthsf/genai-capture/issues"
+  },
+  "author": "GenAI",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=16"
+  },
+  "os": [
+    "darwin",
+    "win32"
+  ]
+}
