@@ -1,4 +1,34 @@
-# GenAI Capture — JetBrains IDE plugin
+# GenAI Capture
+
+Screen capture + annotation, two ways:
+
+- **Desktop app** — capture the whole desktop, annotate (arrows, shapes, text,
+  highlighter, mosaic redaction, watermark), then copy / save / pin. Global
+  hotkeys, gallery, themes. Cross-platform (Java).
+- **JetBrains IDE plugin** (this repo's source) — the same engine inside any
+  JetBrains IDE: GoLand, PhpStorm, PyCharm, WebStorm, IntelliJ, CLion, Rider, …
+
+## Download the desktop app
+
+Grab the installer for your OS from **[Releases](https://github.com/projecthsf/genai-capture/releases)**:
+
+| OS | File |
+|---|---|
+| macOS | `GenAI Capture-<version>.dmg` |
+| Windows (installer) | `GenAI Capture-<version>.exe` |
+| Windows (portable) | `GenAI-Capture-portable-win.zip` |
+
+> **macOS note:** the app isn't notarized yet. If macOS blocks the first launch,
+> allow it under **System Settings ▸ Privacy & Security ▸ "Open Anyway"**, and grant
+> **Screen Recording** permission when asked. Details ship in the DMG's
+> *First Launch.txt*.
+
+The plugin is on the [JetBrains Marketplace](https://plugins.jetbrains.com/) —
+search for **GenAI Capture** (or install the zip from Releases by hand).
+
+---
+
+# JetBrains IDE plugin
 
 Brings the screenshot capture + annotation engine inside any JetBrains IDE
 (GoLand, PhpStorm, PyCharm, WebStorm, IntelliJ, CLion, Rider, …).
