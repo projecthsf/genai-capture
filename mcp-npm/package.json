@@ -1,8 +1,8 @@
 {
   "name": "genai-capture-mcp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MCP server for GenAI Capture — let AI agents capture and annotate your screen (arrows, boxes, text, highlight, blur/redact).",
-  "mcpName": "io.github.projecthsf/genai-capture",
+  "mcpName": "io.github.linhnnmt/genai-capture",
   "bin": {
     "genai-capture-mcp": "bin/genai-capture-mcp.js"
   },
