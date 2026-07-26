@@ -3,6 +3,9 @@ import org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask.FailureLeve
 
 plugins {
     id("java")
+    // Kotlin is used only for the MCP toolset (io.genai.screenshot.mcpide). Version must
+    // match the target IDE's Kotlin metadata — IntelliJ 2026.1 (261) ships Kotlin 2.3.
+    id("org.jetbrains.kotlin.jvm") version "2.3.0"
     // IntelliJ Platform Gradle Plugin. Docs:
     // https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin.html
     // 2.18.0 (not 2.1.0): the pluginVerification DSL used by the publish gate is
@@ -11,7 +14,7 @@ plugins {
 }
 
 group = "io.genai.screenshot"
-version = "1.0.1"
+version = "1.1.0"
 
 repositories {
     mavenCentral()
@@ -20,20 +23,24 @@ repositories {
     }
 }
 
-// Dev builds use the locally-installed GoLand (no multi-GB download); CI (and any
-// machine without it) downloads an IDE, so the build is reproducible anywhere. A
-// plugin built against the bare platform loads in every JetBrains IDE.
-val useLocalIde = file("/Applications/GoLand.app/Contents").exists() &&
-        !providers.environmentVariable("CI").isPresent
+// Compile against a 2025.2+ IDE because the MCP toolset uses com.intellij.mcpServer
+// (bundled since 2025.2). Dev uses the locally-installed IntelliJ IDEA (no multi-GB
+// download); otherwise download IC 2025.2. The plugin still targets sinceBuild 233 —
+// the MCP dependency is OPTIONAL (see plugin.xml), so on older IDEs the plugin loads
+// with its capture/menu features and simply omits the MCP tools.
+val ideaApp = file("/Applications/IntelliJ IDEA.app/Contents")
+val useLocalIde = ideaApp.exists() && !providers.environmentVariable("CI").isPresent
 
 dependencies {
     intellijPlatform {
         if (useLocalIde) {
-            local("/Applications/GoLand.app/Contents")
+            local(ideaApp.absolutePath)
         } else {
-            intellijIdeaCommunity("2024.1")
+            intellijIdeaCommunity("2025.2")
         }
-        // instrumentationTools() removed in plugin 2.x — added automatically now.
+        // MCP server API (bundled 2025.2+). On the compile classpath here; made
+        // runtime-OPTIONAL via <depends optional=…> in plugin.xml.
+        bundledPlugin("com.intellij.mcpServer")
     }
 }
 
@@ -68,14 +75,31 @@ sourceSets {
 }
 
 tasks.named("compileJava") { dependsOn(copyAppSources) }
+// The Kotlin MCP toolset references the reused Java engine (CaptureTools), so the
+// copied sources must exist before Kotlin joint-compiles against them.
+tasks.named("compileKotlin") { dependsOn(copyAppSources) }
 
 // Skip the headless-IDE settings indexer: it's optional (settings are still searchable
 // at runtime) and flaky against a local() IDE. Keeps buildPlugin fast and reliable.
 tasks.named("buildSearchableOptions") { enabled = false }
 
+// Compile WITH JDK 21 (the 2025.2+ platform jars we depend on — for the MCP API —
+// are Java 21 bytecode, which javac 17 can't read), but EMIT Java 17 bytecode via
+// --release 17, so the plugin still loads on JBR-17 IDEs (sinceBuild 233).
 java {
-    // GoLand 2024.1 ships JBR 17; compile to 17 for compatibility across IDEs.
-    toolchain { languageVersion = JavaLanguageVersion.of(17) }
+    toolchain { languageVersion = JavaLanguageVersion.of(21) }
+}
+tasks.withType<JavaCompile>().configureEach {
+    options.release.set(17)
+}
+
+kotlin {
+    jvmToolchain(21)   // compile with JDK 21 (to read the platform)…
+}
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)   // …but emit Java 17, to match compileJava
+    }
 }
 
 intellijPlatform {
@@ -102,8 +126,11 @@ intellijPlatform {
             FailureLevel.INVALID_PLUGIN,
         ))
         ides {
-            // Verify against the newest released unified IDEA. One download, enough to catch
-            // forward-compat problems.
+            // Verify against the newest released IDEA (has the MCP server) — confirms the
+            // 1.1.0 MCP additions are structurally valid and forward-compatible. The core
+            // capture/annotate code is unchanged from the already-verified 1.0.1, so its
+            // 2023.3+ compatibility is unaffected; the MCP tools are optional-dependency
+            // gated (mcp.xml), so pre-2025.2 IDEs load the plugin without them.
             latest {
                 types.set(listOf(IntelliJPlatformType.IntellijIdea))
             }

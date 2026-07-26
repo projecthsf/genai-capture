@@ -20,6 +20,12 @@
               as an always-on-top floating window for reference.</li>
         </ul>
 
+        <p><b>AI agents (MCP)</b> — on IDEs <b>2025.2+</b>, GenAI Capture adds tools to the
+        IDE's built-in MCP server, so AI assistants (Claude, and other MCP clients) can
+        <b>capture your screen</b> and <b>annotate an image</b> (arrows, boxes, text,
+        highlight, blur/redact) on request. Everything runs locally. On older IDEs the
+        plugin works exactly as before, without the MCP tools.</p>
+
         <p><b>Entry points</b></p>
         <ul>
           <li><b>Tools &gt; Take Screenshot</b> — capture now (<code>&#8984;&#8679;1</code> /
@@ -57,9 +63,25 @@
         one-time grant any screen-capture tool needs.</p>
     ]]></description>
 
+    <change-notes><![CDATA[
+        <p><b>1.1.0</b></p>
+        <ul>
+          <li><b>New — AI agent tools (MCP), on IDEs 2025.2+.</b> GenAI Capture registers
+              <code>capture_screen_to_file</code> and <code>annotate_image</code> with the
+              IDE's built-in MCP server, so an AI assistant can capture your screen and mark
+              it up (arrows, boxes, text, highlight, blur/redact) on request. Optional —
+              older IDEs are unaffected.</li>
+        </ul>
+    ]]></change-notes>
+
     <!-- Depends only on the core platform, so it loads in every JetBrains IDE
          (GoLand, PhpStorm, PyCharm, WebStorm, IntelliJ, CLion, Rider, …). -->
     <depends>com.intellij.modules.platform</depends>
+
+    <!-- OPTIONAL: the IDE's built-in MCP server (bundled 2025.2+). Where present,
+         mcp.xml adds capture/annotate tools for AI agents. On older IDEs this is
+         skipped and the plugin still loads with its capture/menu features. -->
+    <depends optional="true" config-file="mcp.xml">com.intellij.mcpServer</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Tools ▸ GenAI Capture (group) ▸ { Watermark, Toolbar } -->
