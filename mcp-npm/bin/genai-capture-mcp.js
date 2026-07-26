@@ -53,9 +53,13 @@ function findBinary() {
 const bin = findBinary();
 if (!bin) {
   process.stderr.write(
-    'GenAI Capture is not installed.\n' +
-    'Download it from ' + DOWNLOAD_URL + '\n' +
-    'then re-run. (Or set GENAI_CAPTURE_BIN to the app binary path.)\n');
+    'GenAI Capture (desktop app) is not installed — this MCP server needs it.\n' +
+    'Install it from ' + DOWNLOAD_URL + ', then re-run.\n' +
+    '(Already installed elsewhere? Set GENAI_CAPTURE_BIN to the app binary path.)\n' +
+    '\n' +
+    'Note: there is also a GenAI Capture plugin for JetBrains IDEs, but that is for\n' +
+    'capturing inside the IDE — it does not provide this MCP server. For AI-agent\n' +
+    'capture, install the desktop app above.\n');
   process.exit(1);
 }
 
