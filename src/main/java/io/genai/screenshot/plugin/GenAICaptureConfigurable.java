@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.JComponent;
 
 /**
- * "Settings ▸ Tools ▸ GenAI Capture" — the group node. It has no settings of its
+ * "Settings ▸ Tools ▸ Desktop Capture" — the group node. It has no settings of its
  * own; returning {@code null} from {@link #createComponent()} makes the platform
  * render the standard landing page that links to the child pages (Watermark,
  * Toolbar), which are registered with {@code parentId} in plugin.xml.
@@ -17,7 +17,7 @@ public class GenAICaptureConfigurable implements Configurable {
     @Nls(capitalization = Nls.Capitalization.Title)
     @Override
     public String getDisplayName() {
-        return "GenAI Capture";
+        return "Desktop Capture";
     }
 
     @Nullable

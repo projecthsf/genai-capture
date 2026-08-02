@@ -6,7 +6,7 @@ import com.intellij.mcpserver.annotations.McpTool
 import io.genai.screenshot.mcp.CaptureTools
 
 /**
- * Exposes GenAI Capture's engine through the IDE's built-in MCP server, so AI
+ * Exposes Desktop Capture's engine through the IDE's built-in MCP server, so AI
  * agents can capture and annotate the screen without the desktop app installed.
  *
  * The IDE MCP tool API can only return TEXT (its result content is a sealed `Text`

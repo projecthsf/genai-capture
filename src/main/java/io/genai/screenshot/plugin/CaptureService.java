@@ -19,7 +19,7 @@ import java.util.List;
 
 /**
  * Shared capture logic for the menu / status-bar actions: grab the whole
- * (multi-monitor) desktop and open the GenAI Capture annotation overlay (reused
+ * (multi-monitor) desktop and open the Desktop Capture annotation overlay (reused
  * from the desktop app).
  *
  * <p>On macOS the IDE needs Screen Recording permission (System Settings ▸
@@ -65,7 +65,7 @@ public final class CaptureService {
                 shot = new Robot().createScreenCapture(virtual);
             } catch (AWTException ex) {
                 restore.run();
-                Messages.showErrorDialog("Could not capture the screen: " + ex.getMessage(), "GenAI Capture");
+                Messages.showErrorDialog("Could not capture the screen: " + ex.getMessage(), "Desktop Capture");
                 return;
             }
             // Keep the IDE hidden; bring it back when the overlay is dismissed.
@@ -85,7 +85,7 @@ public final class CaptureService {
         try {
             return new Robot().createScreenCapture(r);
         } catch (AWTException ex) {
-            Messages.showErrorDialog("Could not capture the screen: " + ex.getMessage(), "GenAI Capture");
+            Messages.showErrorDialog("Could not capture the screen: " + ex.getMessage(), "Desktop Capture");
             return null;
         }
     }

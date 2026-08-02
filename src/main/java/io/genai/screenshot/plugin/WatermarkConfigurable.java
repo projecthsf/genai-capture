@@ -34,7 +34,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
- * "Settings ▸ Tools ▸ GenAI Capture ▸ Watermark" — native IntelliJ rendering of
+ * "Settings ▸ Tools ▸ Desktop Capture ▸ Watermark" — native IntelliJ rendering of
  * the watermark options (appearance, default text, behaviour), bound to the
  * shared {@link DrawingStyle} preferences. Every control saves immediately, so
  * there's nothing to Apply — values take effect on the next capture.

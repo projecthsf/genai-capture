@@ -1,1 +1,1 @@
-rootProject.name = "genai-capture-plugin"
+rootProject.name = "desktop-capture-plugin"

@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * "Settings ▸ Tools ▸ GenAI Capture ▸ Toolbar" — choose which annotation tools
+ * "Settings ▸ Tools ▸ Desktop Capture ▸ Toolbar" — choose which annotation tools
  * appear on the capture toolbar (click to toggle) and reorder them with the
  * up/down buttons. Native IntelliJ list rendering; saves to the shared
  * {@link ToolbarConfig} preferences immediately (effective on the next capture).

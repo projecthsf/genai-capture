@@ -20,7 +20,7 @@ public class CaptureStatusBarWidgetFactory implements StatusBarWidgetFactory {
     @NotNull
     @Override
     public String getDisplayName() {
-        return "GenAI Capture: Screenshot";
+        return "Desktop Capture: Screenshot";
     }
 
     @NotNull
@@ -29,7 +29,7 @@ public class CaptureStatusBarWidgetFactory implements StatusBarWidgetFactory {
         return new CaptureStatusBarWidget(
                 CaptureStatusBarWidget.SCREENSHOT_ID,
                 PluginIcons.CAMERA,
-                "Take Screenshot (GenAI Capture)",
+                "Take Screenshot (Desktop Capture)",
                 CaptureService::capture);
     }
 }

@@ -21,7 +21,7 @@ public class CaptureDesktopStatusBarWidgetFactory implements StatusBarWidgetFact
     @NotNull
     @Override
     public String getDisplayName() {
-        return "GenAI Capture: Desktop (hide IDE)";
+        return "Desktop Capture: Desktop (hide IDE)";
     }
 
     @NotNull
@@ -30,7 +30,7 @@ public class CaptureDesktopStatusBarWidgetFactory implements StatusBarWidgetFact
         return new CaptureStatusBarWidget(
                 CaptureStatusBarWidget.DESKTOP_ID,
                 PluginIcons.DESKTOP,
-                "Capture Desktop — hide IDE (GenAI Capture)",
+                "Capture Desktop — hide IDE (Desktop Capture)",
                 CaptureService::captureHidingIde);
     }
 }

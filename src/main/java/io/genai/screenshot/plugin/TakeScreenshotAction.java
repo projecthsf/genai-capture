@@ -4,7 +4,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 
 /**
- * "Tools ▸ Take Screenshot" — capture the desktop now and open the GenAI Capture
+ * "Tools ▸ Take Screenshot" — capture the desktop now and open the Desktop Capture
  * annotation overlay.
  */
 public class TakeScreenshotAction extends AnAction {

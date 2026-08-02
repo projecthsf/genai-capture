@@ -1,8 +1,8 @@
 <idea-plugin>
-    <id>io.genai.screenshot.plugin</id>
-    <name>GenAI Capture</name>
-    <version>1.0.1</version>
-    <vendor email="w2ajax@gmail.com" url="https://github.com/projecthsf/genai-capture">genai</vendor>
+    <id>io.genai.desktopcapture</id>
+    <name>Desktop Capture</name>
+    <version>1.0.0</version>
+    <vendor email="w2ajax@gmail.com" url="https://github.com/projecthsf/genai-capture">GenAI</vendor>
 
     <description><![CDATA[
         <p>Capture and annotate screenshots without ever leaving your IDE. Grab the whole
@@ -20,7 +20,7 @@
               as an always-on-top floating window for reference.</li>
         </ul>
 
-        <p><b>AI agents (MCP)</b> — on IDEs <b>2025.2+</b>, GenAI Capture adds tools to the
+        <p><b>AI agents (MCP)</b> — on IDEs <b>2025.2+</b>, Desktop Capture adds tools to the
         IDE's built-in MCP server, so AI assistants (Claude, and other MCP clients) can
         <b>capture your screen</b> and <b>annotate an image</b> (arrows, boxes, text,
         highlight, blur/redact) on request. Everything runs locally. On older IDEs the
@@ -40,7 +40,7 @@
               <b>Settings &gt; Keymap</b>.</li>
         </ul>
 
-        <p><b>Settings</b> (<b>Settings &gt; Tools &gt; GenAI Capture</b>)</p>
+        <p><b>Settings</b> (<b>Settings &gt; Tools &gt; Desktop Capture</b>)</p>
         <ul>
           <li><b>Watermark</b> — default text plus opacity, size, rotation, spacing, blur and
               colour, with a live preview; optionally stamp every capture automatically.</li>
@@ -64,13 +64,15 @@
     ]]></description>
 
     <change-notes><![CDATA[
-        <p><b>1.1.0</b></p>
+        <p><b>1.0.0</b> — first release.</p>
         <ul>
-          <li><b>New — AI agent tools (MCP), on IDEs 2025.2+.</b> GenAI Capture registers
+          <li>Capture the desktop (instant, delayed, or IDE-hidden) and annotate with
+              arrows, shapes, text, numbered steps, highlighter, blur/redact and watermarks —
+              then copy, save, or pin.</li>
+          <li><b>AI agent tools (MCP), on IDEs 2025.2+.</b> Registers
               <code>capture_screen_to_file</code> and <code>annotate_image</code> with the
-              IDE's built-in MCP server, so an AI assistant can capture your screen and mark
-              it up (arrows, boxes, text, highlight, blur/redact) on request. Optional —
-              older IDEs are unaffected.</li>
+              IDE's built-in MCP server, so an AI assistant can capture and mark up your
+              screen on request. Optional — older IDEs are unaffected.</li>
         </ul>
     ]]></change-notes>
 
@@ -84,11 +86,11 @@
     <depends optional="true" config-file="mcp.xml">com.intellij.mcpServer</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <!-- Tools ▸ GenAI Capture (group) ▸ { Watermark, Toolbar } -->
+        <!-- Tools ▸ Desktop Capture (group) ▸ { Watermark, Toolbar } -->
         <applicationConfigurable
                 groupId="tools"
                 id="io.genai.screenshot.settings"
-                displayName="GenAI Capture"
+                displayName="Desktop Capture"
                 instance="io.genai.screenshot.plugin.GenAICaptureConfigurable"/>
         <applicationConfigurable
                 parentId="io.genai.screenshot.settings"

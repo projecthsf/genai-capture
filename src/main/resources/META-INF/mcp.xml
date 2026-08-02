@@ -1,5 +1,5 @@
 <!-- Loaded only when com.intellij.mcpServer is present (optional dependency,
-     bundled in IDEs 2025.2+). Registers GenAI Capture's MCP tools with the IDE's
+     bundled in IDEs 2025.2+). Registers Desktop Capture's MCP tools with the IDE's
      built-in MCP server. On older IDEs this file is ignored and the plugin's
      capture/menu features work as before. -->
 <idea-plugin>

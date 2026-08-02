@@ -14,7 +14,7 @@ plugins {
 }
 
 group = "io.genai.screenshot"
-version = "1.1.0"
+version = "1.0.0"
 
 repositories {
     mavenCentral()
@@ -67,14 +67,28 @@ val copyAppSources by tasks.registering(Copy::class) {
     into(reusedSrc)
 }
 
+// Reuse the app's resources (themes, icons, messages) BUT ship the plugin's own
+// application.properties (app.name=Desktop Capture) so the plugin is branded
+// "Desktop Capture" inside the IDE while the standalone app stays "GenAI Capture".
+val reusedResources = layout.buildDirectory.dir("reused-resources")
+val copyAppResources by tasks.registering(Copy::class) {
+    from("../src/main/resources") {
+        exclude("io/genai/screenshot/application.properties")  // plugin provides its own
+    }
+    into(reusedResources)
+}
+
 sourceSets {
     main {
-        java.srcDir(reusedSrc)                    // reused app code (+ plugin's own src/main/java)
-        resources.srcDir("../src/main/resources") // themes, icons, messages, application.properties
+        java.srcDir(reusedSrc)              // reused app code (+ plugin's own src/main/java)
+        resources.srcDir(reusedResources)  // reused resources minus application.properties
+        // (the plugin's own src/main/resources — META-INF + the branded
+        //  application.properties — is already a resource root)
     }
 }
 
 tasks.named("compileJava") { dependsOn(copyAppSources) }
+tasks.named("processResources") { dependsOn(copyAppResources) }
 // The Kotlin MCP toolset references the reused Java engine (CaptureTools), so the
 // copied sources must exist before Kotlin joint-compiles against them.
 tasks.named("compileKotlin") { dependsOn(copyAppSources) }
